@@ -1,0 +1,29 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: ecr-update-secret
+spec:
+  schedule: "1 */12 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: access
+                  name: aws-secret
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: secret
+                  name: aws-secret
+            - name: namespace
+              value: default
+            name: ecr-pull-secret
+            image: <put image name>
+            imagePullPolicy: IfNotPresent
+          restartPolicy: OnFailure
+          serviceAccountName: ecr-pull-secret-sa
