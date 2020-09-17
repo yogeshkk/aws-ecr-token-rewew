@@ -1,0 +1,5 @@
+FROM amazon/aws-cli
+COPY --from=lachlanevenson/k8s-kubectl:v1.18.5 /usr/local/bin/kubectl /usr/local/bin/kubectl
+COPY update-secret.sh /
+RUN chmod +x /update-secret.sh
+ENTRYPOINT ["/update-secret.sh"]
